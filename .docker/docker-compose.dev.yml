@@ -1,0 +1,16 @@
+services:
+  infra-workshop:
+    image: utkusarioglu/tf-devcontainer:23-ubuntu-test-21
+    environment:
+      TZ: Etc/UTC0
+      CLUSTER_HOST: local.dev.k3d.infra-workshop.utkusarioglu.com
+    volumes:
+      - type: bind
+        source: ..
+        target: /utkusarioglu/infra-workshop
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+    extra_hosts:
+      host-gateway: host-gateway
+    

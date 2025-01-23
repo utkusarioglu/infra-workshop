@@ -1,0 +1,24 @@
+services:
+  infra-workshop:
+    environment:
+      GH_TOKEN: ${GH_TOKEN}
+    stdin_open: true
+    init: true
+    volumes:
+      - type: volume
+        source: vscode-server-extensions
+        target: /home/dev/.vscode-server/extensions
+      - type: volume
+        source: vscode-server-insiders-extensions
+        target: /home/dev/.vscode-server-insiders/extensions
+      - type: volume
+        source: go
+        target: /go
+
+volumes:
+  vscode-server-extensions:
+    name: infra-workshop-vscode-extensions
+  vscode-server-insiders-extensions:
+    name: infra-workshop-vscode-server-insiders-extensions
+  go:
+    name: infra-workshop-go

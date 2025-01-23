@@ -1,0 +1,28 @@
+{
+  "name": "utkusarioglu/infra-workshop",
+  "service": "infra-workshop",
+  "dockerComposeFile": [
+    "docker-compose.devcontainer.yml",
+    "../.docker/docker-compose.dev.yml"
+  ],
+  "workspaceFolder": "/utkusarioglu/infra-workshop",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "workbench.colorCustomizations": {
+          "activityBar.background": "#553355"
+        }
+      },
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "golang.go",
+        "hashicorp.terraform",
+        "hashicorp.hcl",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "amazonwebservices.aws-toolkit-vscode",
+        "cschleiden.vscode-github-actions",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}

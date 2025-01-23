@@ -1,0 +1,63 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Start cluster",
+      "detail": "Run selected cluster terragrunt thingy",
+      "command": "terragrunt",
+      "args": [
+        "run-all",
+        "apply",
+        "--terragrunt-working-dir=src/targets/${input:target}",
+        "--terragrunt-non-interactive"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "icon": {
+        "id": "play",
+        "color": "terminal.ansiGreen"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Destroy cluter",
+      "detail": "Destroy a running cluster",
+      "command": "terragrunt",
+      "args": [
+        "run-all", 
+        "destroy", 
+        "--terragrunt-working-dir=src/targets/${input:target}", 
+        "--terragrunt-non-interactive"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "icon": {
+        "color": "terminal.ansiRed",
+        "id": "stop"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "target",
+      "description": "Target to run",
+      "type": "pickString",
+      "options": [
+        "k3d/dev/local"
+      ]
+    }
+  ]
+}
