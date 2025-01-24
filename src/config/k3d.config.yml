@@ -2,16 +2,20 @@ apiVersion: k3d.io/v1alpha5
 kind: Simple
 metadata:
   name: infra-workshop 
-servers: 1 
-agents: 2 
+servers: 1
+agents: 5
+
 kubeAPI:
   host: ${CLUSTER_HOST}
-  # hostIP: "127.0.0.1" # where the Kubernetes API will be listening on
-  hostPort: "6445" # where the Kubernetes API listening port will be mapped to on your host system
-image: rancher/k3s:v1.20.4-k3s1 # same as `--image rancher/k3s:v1.20.4-k3s1`
-# network: my-custom-net # same as `--network my-custom-net`
+  # host: local.dev.k3d.infra-workshop.utkusarioglu.com
+  #  hostIP: "127.0.0.1" # where the Kubernetes API will be listening on
+  hostPort: "6443" # where the Kubernetes API listening port will be mapped to on your host system
+
+# image: rancher/k3s:v1.20.4-k3s1 # same as `--image rancher/k3s:v1.20.4-k3s1`
+# network: ${CLUSTER_HOST}-k3d # same as `--network my-custom-net`
 # subnet: "172.28.0.0/16" # same as `--subnet 172.28.0.0/16`
 # token: superSecretToken # same as `--token superSecretToken`
+
 ports:
   - port: 80:80
     nodeFilters:
@@ -19,6 +23,24 @@ ports:
   - port: 443:443
     nodeFilters:
       - loadbalancer
+
+volumes:
+  - volume: ${TERRAGRUNT_HOST_VOLUME_ROOT}/worker-0:${NODE_VOLUME_ROOT}
+    nodeFilters:
+      - agent:0
+  - volume: ${TERRAGRUNT_HOST_VOLUME_ROOT}/worker-1:${NODE_VOLUME_ROOT}
+    nodeFilters:
+      - agent:1
+  - volume: ${TERRAGRUNT_HOST_VOLUME_ROOT}/worker-2:${NODE_VOLUME_ROOT}
+    nodeFilters:
+      - agent:2
+  - volume: ${TERRAGRUNT_HOST_VOLUME_ROOT}/worker-3:${NODE_VOLUME_ROOT}
+    nodeFilters:
+      - agent:3
+  - volume: ${TERRAGRUNT_HOST_VOLUME_ROOT}/worker-4:${NODE_VOLUME_ROOT}
+    nodeFilters:
+      - agent:4
+
 options:
   k3d:
     wait: true
@@ -26,8 +48,69 @@ options:
     disableLoadbalancer: false
     disableImageVolume: false
     disableRollback: false
+  kubeconfig:
+    updateDefaultKubeconfig: true
+    switchCurrentContext: true
+
   k3s:
     extraArgs:
       - arg: --tls-san=${CLUSTER_HOST}
         nodeFilters:
           - server:*
+      - arg: --disable=local-storage
+        nodeFilters:
+          - server:*
+      - arg: --node-taint=node-role.kubernetes.io/control-plane=true:NoExecute
+        nodeFilters:
+          - server:*
+      - arg: --disable=traefik
+        nodeFilters:
+          - server:*
+
+      - arg: --node-name=server-0
+        nodeFilters:
+          - server:0
+
+      - arg: --node-name=worker-0
+        nodeFilters:
+          - agent:0
+      - arg: --node-name=worker-1
+        nodeFilters:
+          - agent:1
+      - arg: --node-name=worker-2
+        nodeFilters:
+          - agent:2
+      - arg: --node-name=worker-3
+        nodeFilters:
+          - agent:3
+      - arg: --node-name=worker-4
+        nodeFilters:
+          - agent:4
+
+    nodeLabels:
+      - label: "topology.kubernetes.io/region=${CLUSTER_REGION}"
+        nodeFilters:
+          - server:*
+          - agent:*
+      - label: "topology.kubernetes.io/zone=${CLUSTER_REGION}a"
+        nodeFilters:
+          - agent:0
+          - agent:1
+      - label: "topology.kubernetes.io/zone=${CLUSTER_REGION}b"
+        nodeFilters:
+          - agent:2
+      - label: "topology.kubernetes.io/zone=${CLUSTER_REGION}c"
+        nodeFilters:
+          - agent:3
+          - agent:4
+      # - label: vault_in_k8s=true
+      #   nodeFilters:
+      #     - agent:0
+      #     - agent:2
+      #     - agent:4
+      # - label: "postgres-storage.ms/dumps-mounted=true"
+      #   nodeFilters:
+      #     - agent:2
+      # - label: "loki-single-binary.observability/target-volume=true"
+      #   nodeFilters:
+      #     - agent:1

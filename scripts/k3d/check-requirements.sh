@@ -1,11 +1,9 @@
 #!/bin/bash
 
-repo_root_abspath=$1
-
 # Retrieves these from this import: 
 # `HOSTS_ENTRIES_START_PHRASE`
 # `HOSTS_ENTRIES_END_PHRASE`
-source $repo_root_abspath/.repo.config
+source ${0%/*}/../../.repo.config
 
 function check_docker_sock_ownership {
   docker_sock_path=/var/run/docker.sock

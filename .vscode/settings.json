@@ -1,0 +1,31 @@
+{
+  "remote.autoForwardPorts": false,
+   "runOnSave.commands": [
+    {
+      "match": "\\.tf$",
+      "isAsync": true,
+      "command": "terraform fmt -recursive"
+    },
+    {
+      "match": "\\.tfvars$",
+      "isAsync": true,
+      "command": "terraform fmt -recursive"
+    },
+    {
+      "match": "\\.hcl$",
+      "isAsync": true,
+      "command": "terragrunt hclfmt ${file}"
+    },
+    {
+      "match": "\\.env(\\.\\w+)?$",
+      "notMatch": "\\.example$",
+      "isAsync": true,
+      "command": "/scripts/create-env-example.sh"
+    },
+    {
+      "match": "\\.env$",
+      "isAsync": true,
+      "command": "gh secret set -f .env"
+    }
+  ],
+}

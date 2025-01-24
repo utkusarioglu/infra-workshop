@@ -5,7 +5,7 @@ HOSTS_FILE_BACKUP=/etc/hosts-backup
 HOSTS_FILE_TEMP=/etc/hosts-temp
 
 HOSTS="
-local.dev.k3d.infra-workshop.utkusarioglu.com
+${CLUSTER_HOST}
 infra-workshop.utkusarioglu.com
 "
 

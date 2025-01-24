@@ -1,18 +1,21 @@
 #!/bin/bash
 
-cluster_name=$1
-cluster_config_path=$2
+set -euo pipefail
+bash --version
 
-index=0
-for param_name in cluster_name cluster_config_path; do
-  count=$(( index + 1 ))
-  if [ -z "${!param_name}" ]; then
-    human_name=$(echo $param_name | tr '_' ' ')
-    echo "Error: Param no $count needs to be the $human_name"
-    exit $count
-  fi
-  (( index++ ))
-done
+cluster_name=${1:?'Cluster name needs to be param #1'}
+cluster_config_path=${2:?'Cluster config path needs to be param #2'}
+host_volume_relpath=${3:?'Host volumes relpath needs to be param #3'}
+
+: ${HOST_ROOT:?'This environment variable needs to be set'}
+: ${HOST_VOLUME_RELPATH:?'This environment variable needs to be set'}
+
+repo_volume_relpath="${HOST_VOLUME_RELPATH}/${host_volume_relpath}"
+mkdir -p ${repo_volume_relpath}
+
+terragrunt_host_volume_root=${HOST_ROOT}/${repo_volume_relpath}
+
+export TERRAGRUNT_HOST_VOLUME_ROOT=${terragrunt_host_volume_root}
 
 clusters=$(k3d cluster list -o json)
 matching_clusters=$(echo $clusters | jq -r '
