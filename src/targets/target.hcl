@@ -17,4 +17,8 @@ terraform {
     ]
   }
 
+  after_hook "tflint_validate" {
+    commands = ["validate"]
+    execute  = ["sh", "-c", "tflint --config=.tflint.hcl -f default"]
+  }
 }

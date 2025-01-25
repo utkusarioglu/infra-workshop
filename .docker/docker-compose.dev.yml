@@ -27,9 +27,15 @@ services:
       - type: bind
         source: /var/run/docker.sock
         target: /var/run/docker.sock
+
       - type: bind
         source: /home/utkusarioglu/.kube
         target: /home/dev/.kube
+      - type: bind
+        source: ~/.aws/credentials
+        target: /home/dev/.aws/credentials
+        read_only: true
+
 
     extra_hosts:
       host-gateway: host-gateway

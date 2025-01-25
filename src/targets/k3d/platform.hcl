@@ -1,10 +1,14 @@
 locals {
   destroy_cluster_action = "delete" // or stop
   k3d_cluster_region     = "eu-central-1"
-  k3d_cluster_hostname   = "local.dev.k3d.infra-workshop.utkusarioglu.com"
+  vars                   = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals
 
-  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals
-
+  k3d_cluster_hostname = join(".", [
+    local.vars.region_name,
+    local.vars.environment_name,
+    local.vars.platform_name,
+    get_env("CLUSTER_HOSTNAME")
+  ])
   k3d_config_relpath = join("/", [local.vars.config_abspath, "k3d.config.yml"])
 }
 

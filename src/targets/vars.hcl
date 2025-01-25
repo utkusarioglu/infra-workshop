@@ -1,5 +1,6 @@
 locals {
   cluster_name      = "infra-workshop"
+  cluster_code      = "iw"
   devcontainer_pass = "catdog"
 
   module_src_relpath   = split("${get_env("TARGETS_RELPATH")}/", get_original_terragrunt_dir())[1]

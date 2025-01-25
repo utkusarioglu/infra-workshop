@@ -56,8 +56,10 @@
       "description": "Target to run",
       "type": "pickString",
       "options": [
-        "k3d/dev/local"
-      ]
+        "k3d/dev/local",
+        "aws/dev/eu-central-1"
+      ],
+      "default": "k3d/dev/local",
     }
   ]
 }
