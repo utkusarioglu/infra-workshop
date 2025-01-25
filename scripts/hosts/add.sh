@@ -3,10 +3,17 @@
 set -euo pipefail
 bash -version
 
-hosts_gateway_phrase=${1:?'Hosts gateway phrase is required'}
-k3d_cluster_hostname=${2:?'K3d cluster hostname is required'}
-hosts_entries_start_phrase=${3:?'Host entries start phrase is required'}
-hosts_entries_end_phrase=${4:?'Host entries end phrase is required'}
+ENVS=(
+  CLUSTER_HOSTNAME
+)
+. /home/dev/scripts/utils/check-envs.sh
+ARGS=(
+  hosts_gateway_phrase
+  k3d_cluster_hostname
+  hosts_entries_start_phrase
+  hosts_entries_end_phrase
+)
+. /home/dev/scripts/utils/parse-args.sh
 
 hosts_entries="
 ${CLUSTER_HOSTNAME}

@@ -3,14 +3,19 @@
 set -euo pipefail
 bash --version
 
-: ${HOST_ROOT:?'This environment variable needs to be set'}
-: ${HOST_VOLUME_RELPATH:?'This environment variable needs to be set'}
-
-cluster_name=${1:?'Cluster name needs to be param #1'}
-cluster_config_path=${2:?'Cluster config path needs to be param #2'}
-host_volume_relpath=${3:?'Host volumes relpath needs to be param #3'}
-k3d_cluster_region=${4:?'Cluster region needs to be param #4'}
-k3d_cluster_hostname=${5:?'Cluster hostname needs to be param #5'}
+ENVS=(
+  HOST_ROOT
+  HOST_VOLUME_RELPATH
+)
+. /home/dev/scripts/utils/check-envs.sh
+ARGS=(
+  cluster_name
+  cluster_config_path
+  host_volume_relpath
+  k3d_cluster_region
+  k3d_cluster_hostname
+)
+. /home/dev/scripts/utils/parse-args.sh
 
 repo_volume_relpath="${HOST_VOLUME_RELPATH}/${host_volume_relpath}"
 mkdir -p ${repo_volume_relpath}

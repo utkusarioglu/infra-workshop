@@ -3,13 +3,17 @@
 set -euo pipefail
 bash --version
 
-msg='This environment variable is required'
-: ${HOST_GATEWAY_PHRASE:?$msg}
-: ${HOSTS_ENTRIES_START_PHRASE:?$msg}
-: ${HOSTS_ENTRIES_END_PHRASE:?$msg}
-
-root_pass="${1:?'Root password required'}"
-k3d_cluster_hostname=${2:?'K3d cluster hostname is required'}
+ENVS=(
+  HOST_GATEWAY_PHRASE
+  HOSTS_ENTRIES_START_PHRASE
+  HOSTS_ENTRIES_END_PHRASE
+)
+. /home/dev/scripts/utils/check-envs.sh
+ARGS=(
+  root_pass
+  k3d_cluster_hostname
+)
+. /home/dev/scripts/utils/parse-args.sh
 
 current_dir=$(pwd)
 
@@ -27,3 +31,5 @@ scripts/hosts/add.sh \
   "${HOSTS_ENTRIES_START_PHRASE}" \
   "${HOSTS_ENTRIES_END_PHRASE}"
 EOT
+
+echo "Done."

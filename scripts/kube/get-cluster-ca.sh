@@ -3,7 +3,10 @@
 set -euo pipefail
 bash --version
 
-artifact_file=${1:?'Artifact file is required'}
+ARGS=(
+  artifact_file 
+)
+. /home/dev/scripts/utils/parse-args.sh
 
 if [ -z "$artifact_file" ]; then
   echo "Error: artifacts file path needs to be the first param"

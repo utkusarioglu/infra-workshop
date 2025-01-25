@@ -3,8 +3,12 @@
 set -euo pipefail
 bash --version
 
-: ${HOSTS_ENTRIES_START_PHRASE:?'This environment variable is required'}
-: ${HOSTS_ENTRIES_END_PHRASE:?'This environment variable is required'}
+
+ENVS=(
+  HOSTS_ENTRIES_START_PHRASE
+  HOSTS_ENTRIES_END_PHRASE
+)
+. /home/dev/scripts/utils/check-envs.sh
 
 function check_docker_sock_ownership {
   docker_sock_path=/var/run/docker.sock

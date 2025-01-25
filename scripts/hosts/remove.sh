@@ -3,8 +3,11 @@
 set -euo pipefail
 bash --version
 
-hosts_entries_start_phrase=${1:?'Host entries start phrase is required'}
-hosts_entries_end_phrase=${2:?'Host entries end phrase is required'}
+ARGS=(
+  hosts_entries_start_phrase
+  hosts_entries_end_phrase
+)
+. /home/dev/scripts/utils/parse-args.sh
 
 source ${0%/*}/common.sh
 

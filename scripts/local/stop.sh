@@ -3,11 +3,15 @@
 set -euo pipefail
 bash --version
 
-msg='This environment variable is required'
-: ${HOSTS_ENTRIES_START_PHRASE:?$msg}
-: ${HOSTS_ENTRIES_END_PHRASE:?$msg}
-
-root_pass="${1:?'Root password required'}"
+ENVS=(
+  HOSTS_ENTRIES_START_PHRASE
+  HOSTS_ENTRIES_END_PHRASE
+)
+. /home/dev/scripts/utils/check-envs.sh
+ARGS=(
+  root_pass
+)
+. /home/dev/scripts/utils/parse-args.sh
 
 current_dir=$(pwd)
 
