@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# Retrieves these from this import: 
-# `HOSTS_ENTRIES_START_PHRASE`
-# `HOSTS_ENTRIES_END_PHRASE`
-source ${0%/*}/../../.repo.config
+set -euo pipefail
+bash --version
+
+: ${HOSTS_ENTRIES_START_PHRASE:?'This environment variable is required'}
+: ${HOSTS_ENTRIES_END_PHRASE:?'This environment variable is required'}
 
 function check_docker_sock_ownership {
   docker_sock_path=/var/run/docker.sock
@@ -44,7 +45,7 @@ function check_all {
   if (( $err_state != 0 )); then
     echo 
     echo 'Some checks resulted in errors'
-    echo 'Did you forget to run `<repo path>/scripts/prep-for-local.sh`?'
+    echo 'Did `scripts/local/start.sh` fail to run?'
   fi
   return $err_state
 }

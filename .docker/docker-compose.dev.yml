@@ -3,17 +3,22 @@ services:
     image: utkusarioglu/tf-devcontainer:23-ubuntu-test-21
     environment:
       TZ: Etc/UTC0
-      CLUSTER_HOST: local.dev.k3d.infra-workshop.utkusarioglu.com
-      CLUSTER_REGION: eu-central-1
+      CLUSTER_HOSTNAME: infra-workshop.utkusarioglu.com
 
       HOST_ROOT: $PWD
       NODE_VOLUME_ROOT: /dev/xvdf
       HOST_VOLUME_RELPATH: artifacts/volumes
-      TERRAGRUNT_DOWNLOAD_DIR: artifacts/cache
+
       MODULES_RELPATH: src/modules
       CONFIG_RELPATH: src/config
       TARGETS_RELPATH: src/targets
-      ARTIFACTS_RELPATH: artifacts
+
+      KUBE_ARTIFACTS_RELPATH: artifacts/kube
+      TERRAGRUNT_DOWNLOAD_DIR_RELPATH: artifacts/terragrunt-cache
+    
+      HOSTS_ENTRIES_START_PHRASE: '# HOSTS LIST START'
+      HOSTS_ENTRIES_END_PHRASE: '# HOSTS LIST END'
+      HOST_GATEWAY_PHRASE: host-gateway
 
     volumes:
       - type: bind

@@ -1,8 +1,9 @@
 #!/bin/bash
 
-artifact_file=$1
+set -euo pipefail
+bash --version
 
-# CA_FILE_NAME=cluster-ca.crt
+artifact_file=${1:?'Artifact file is required'}
 
 if [ -z "$artifact_file" ]; then
   echo "Error: artifacts file path needs to be the first param"
