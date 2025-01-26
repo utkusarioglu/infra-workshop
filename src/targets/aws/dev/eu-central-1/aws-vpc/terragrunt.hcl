@@ -11,10 +11,10 @@ include "target" {
 }
 
 locals {
-  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals.vars
+  inputs = read_terragrunt_config(find_in_parent_folders("vars.hcl")).inputs
 }
 
 inputs = {
-  cluster_code = local.vars.names.cluster_short
-  tags         = local.vars.tags
+  cluster_code = local.inputs.names.cluster_short
+  tags         = local.inputs.tags
 }

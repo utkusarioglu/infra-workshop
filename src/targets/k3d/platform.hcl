@@ -2,15 +2,15 @@ locals {
   destroy_cluster_action = "delete" // or stop
   k3d_cluster_region     = "eu-central-1"
 
-  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals.vars
+  inputs = read_terragrunt_config(find_in_parent_folders("vars.hcl")).inputs
 
   k3d_cluster_hostname = join(".", [
-    local.vars.names.region,
-    local.vars.names.environment,
-    local.vars.names.platform,
+    local.inputs.names.region,
+    local.inputs.names.environment,
+    local.inputs.names.platform,
     get_env("CLUSTER_HOSTNAME")
   ])
-  k3d_config_relpath = join("/", [local.vars.abspath.config, "k3d.config.yml"])
+  k3d_config_relpath = join("/", [local.inputs.abspath.config, "k3d.config.yml"])
 }
 
 terraform {
@@ -19,7 +19,7 @@ terraform {
     working_dir = get_repo_root()
     execute = [
       "scripts/local/start.sh",
-      local.vars.devcontainer_pass,
+      local.inputs.devcontainer_pass,
       local.k3d_cluster_hostname
     ]
   }
@@ -35,9 +35,9 @@ terraform {
     working_dir = get_repo_root()
     execute = [
       "scripts/k3d/start-cluster.sh",
-      local.vars.names.cluster,
+      local.inputs.names.cluster,
       local.k3d_config_relpath,
-      local.vars.module_src_relpath,
+      local.inputs.module_src_relpath,
       local.k3d_cluster_region,
       local.k3d_cluster_hostname
     ]
@@ -50,7 +50,7 @@ terraform {
       "k3d",
       "cluster",
       local.destroy_cluster_action,
-      local.vars.names.cluster
+      local.inputs.names.cluster
     ]
   }
 
@@ -59,7 +59,7 @@ terraform {
     working_dir = get_repo_root()
     execute = [
       "scripts/local/stop.sh",
-      local.vars.devcontainer_pass
+      local.inputs.devcontainer_pass
     ]
   }
 }

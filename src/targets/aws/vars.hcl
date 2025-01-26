@@ -1,7 +1,7 @@
 locals {
-  parent = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals.vars
+  parent = read_terragrunt_config(find_in_parent_folders("vars.hcl")).inputs
 
-  vars = merge(
+  inputs = merge(
     local.parent,
     {
       profile = "nextjs-grpc-automation"
@@ -17,3 +17,5 @@ locals {
     }
   )
 }
+
+inputs = local.inputs

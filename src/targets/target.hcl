@@ -1,11 +1,11 @@
 locals {
-  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals.vars
+  inputs = read_terragrunt_config(find_in_parent_folders("vars.hcl")).inputs
 }
 
-download_dir = local.vars.abspath.terragrunt_download_dir
+download_dir = local.inputs.abspath.terragrunt_download_dir
 
 terraform {
-  source = join("/", [local.vars.abspath.modules, basename(get_terragrunt_dir())])
+  source = join("/", [local.inputs.abspath.modules, basename(get_terragrunt_dir())])
 
   # // Needed by Vault 
   # after_hook "kube_get_cluster_ca" {
@@ -13,7 +13,7 @@ terraform {
   #   working_dir = get_repo_root()
   #   execute = [
   #     "scripts/kube/get-cluster-ca.sh",
-  #     join("/", [local.vars.kube_artifacts_abspath, "cluster-ca.crt"])
+  #     join("/", [local.inputs.kube_artifacts_abspath, "cluster-ca.crt"])
   #   ]
   # }
 
