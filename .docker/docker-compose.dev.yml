@@ -1,6 +1,6 @@
 services:
   infra-workshop:
-    image: utkusarioglu/tf-devcontainer:23-ubuntu-test-22
+    image: utkusarioglu/tf-devcontainer:23-ubuntu-test-23
     environment:
       TZ: Etc/UTC0
       CLUSTER_HOSTNAME: infra-workshop.utkusarioglu.com
@@ -35,7 +35,6 @@ services:
         source: ~/.aws/credentials
         target: /home/dev/.aws/credentials
         read_only: true
-
 
     extra_hosts:
       host-gateway: host-gateway

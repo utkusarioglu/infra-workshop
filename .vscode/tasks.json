@@ -23,7 +23,7 @@
       "icon": {
         "id": "play",
         "color": "terminal.ansiGreen"
-      }
+      },
     },
     {
       "type": "shell",

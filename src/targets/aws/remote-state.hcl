@@ -1,13 +1,16 @@
 locals {
-  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals
+  vars     = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals
+  vars_aws = read_terragrunt_config(find_in_parent_folders("vars.aws.hcl")).locals
 
-  identifier = join("-", [
-    local.vars.cluster_code,
-    local.vars.platform_name,
-    local.vars.environment_name,
-    local.vars.region_name,
-    local.vars.module_name,
-  ])
+  identifier = join("-",
+    concat(
+      [local.vars.cluster_code],
+      matchkeys(
+        values(local.vars.names),
+        keys(local.vars.names),
+        ["platform", "environment", "region_short", "unit"]
+      )
+  ))
 }
 
 remote_state {
@@ -21,11 +24,9 @@ remote_state {
   config = {
     bucket         = local.identifier
     key            = "terraform.tfstate"
-    region         = local.vars.region_name
+    region         = local.vars.names.region
     encrypt        = true
     dynamodb_table = local.identifier
-
-    // THIS NEEDS TO CHANGE
-    profile = "nextjs-grpc-automation"
+    profile        = local.vars_aws.profile
   }
 }
