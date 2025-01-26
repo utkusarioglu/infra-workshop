@@ -1,11 +1,11 @@
 locals {
-  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals
+  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals.vars
 }
 
-download_dir = local.vars.terragrunt_download_dir_abspath
+download_dir = local.vars.abspath.terragrunt_download_dir
 
 terraform {
-  source = join("/", [local.vars.modules_abspath, basename(get_terragrunt_dir())])
+  source = join("/", [local.vars.abspath.modules, basename(get_terragrunt_dir())])
 
   # // Needed by Vault 
   # after_hook "kube_get_cluster_ca" {

@@ -11,7 +11,7 @@ include "target" {
 }
 
 locals {
-  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals
+  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals.vars
 }
 
 terraform {

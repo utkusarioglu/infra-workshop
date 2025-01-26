@@ -1,15 +1,10 @@
 locals {
-  vars     = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals
-  vars_aws = read_terragrunt_config(find_in_parent_folders("vars.aws.hcl")).locals
+  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals.vars
 
-  identifier = join("-",
-    concat(
-      [local.vars.cluster_code],
-      matchkeys(
-        values(local.vars.names),
-        keys(local.vars.names),
-        ["platform", "environment", "region_short", "unit"]
-      )
+  identifier = join("-", matchkeys(
+    values(local.vars.names),
+    keys(local.vars.names),
+    ["cluster_short", "platform", "environment", "region_short", "unit"]
   ))
 }
 
@@ -27,6 +22,6 @@ remote_state {
     region         = local.vars.names.region
     encrypt        = true
     dynamodb_table = local.identifier
-    profile        = local.vars_aws.profile
+    profile        = local.vars.profile
   }
 }

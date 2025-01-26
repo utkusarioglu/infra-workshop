@@ -1,6 +1,5 @@
 locals {
-  vars     = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals
-  vars_aws = read_terragrunt_config(find_in_parent_folders("vars.aws.hcl")).locals
+  vars = read_terragrunt_config(find_in_parent_folders("vars.hcl")).locals.vars
 }
 
 generate "provider_aws" {
@@ -9,7 +8,7 @@ generate "provider_aws" {
   contents  = <<-EOF
     provider "aws" {
       region = "${local.vars.names.region}"
-      profile = "${local.vars_aws.profile}"
+      profile = "${local.vars.profile}"
     }
   EOF
 }
