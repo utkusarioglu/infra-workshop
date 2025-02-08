@@ -19,7 +19,6 @@ resource "aws_internet_gateway" "gator" {
 resource "aws_route_table" "kitty" {
   vpc_id = aws_vpc.tiger.id
 
-
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.gator.id
@@ -101,24 +100,10 @@ resource "local_file" "ssh_private_key" {
   filename = local.ssh_private_key_abspath
 }
 
-locals {
-  ssh_private_key_abspath = join("/", [var.abspath_artifacts_base, "private-key.pem"])
-}
-
 resource "null_resource" "ssh_private_key_chmod" {
   depends_on = [local_file.ssh_private_key]
 
   provisioner "local-exec" {
     command = "chmod 600 ${local.ssh_private_key_abspath}"
   }
-}
-
-output "ssh_connection_string" {
-  description = "SSH connection string to access the instance"
-  value       = "ssh -i artifacts/private-key.pem ec2-user@${aws_instance.bird.public_ip}"
-}
-
-output "web_address" {
-  description = "Visit the website here"
-  value       = "http://${aws_instance.bird.public_ip}"
 }

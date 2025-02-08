@@ -60,7 +60,8 @@
       "options": [
         "k3d/dev/local",
         "aws/dev/eu-central-1",
-        "aws/dev/us-west-1"
+        "aws/dev/us-west-1",
+        "aws/dev/us-east-1"
       ],
       "default": "k3d/dev/local",
     }
