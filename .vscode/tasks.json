@@ -3,8 +3,8 @@
   "tasks": [
     {
       "type": "shell",
-      "label": "Start cluster",
-      "detail": "Run selected cluster terragrunt thingy",
+      "label": "Apply",
+      "detail": "Execute `terragrunt run-all apply` on a target",
       "command": "terragrunt",
       "args": [
         "run-all",
@@ -12,6 +12,7 @@
         "--terragrunt-working-dir=src/targets/${input:target}",
         "--terragrunt-non-interactive"
       ],
+      "group": "build",
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -27,8 +28,8 @@
     },
     {
       "type": "shell",
-      "label": "Destroy cluter",
-      "detail": "Destroy a running cluster",
+      "label": "Destroy",
+      "detail": "Execute `terragrunt run-all destroy` on a target",
       "command": "terragrunt",
       "args": [
         "run-all", 
@@ -36,6 +37,7 @@
         "--terragrunt-working-dir=src/targets/${input:target}", 
         "--terragrunt-non-interactive"
       ],
+      "group": "build",
       "presentation": {
         "echo": true,
         "reveal": "always",
@@ -57,7 +59,8 @@
       "type": "pickString",
       "options": [
         "k3d/dev/local",
-        "aws/dev/eu-central-1"
+        "aws/dev/eu-central-1",
+        "aws/dev/us-west-1"
       ],
       "default": "k3d/dev/local",
     }

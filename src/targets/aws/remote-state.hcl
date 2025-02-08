@@ -1,7 +1,13 @@
 locals {
   inputs = read_terragrunt_config(find_in_parent_folders("vars.hcl")).inputs
 
-  identifier = join("-", matchkeys(
+  region_identifier = join("-", matchkeys(
+    values(local.inputs.names),
+    keys(local.inputs.names),
+    ["cluster_short", "platform", "environment", "region_short"]
+  ))
+
+  unit_identifier = join("-", matchkeys(
     values(local.inputs.names),
     keys(local.inputs.names),
     ["cluster_short", "platform", "environment", "region_short", "unit"]
@@ -17,11 +23,11 @@ remote_state {
   }
 
   config = {
-    bucket         = local.identifier
-    key            = "terraform.tfstate"
+    bucket         = local.region_identifier
+    key            = "${local.unit_identifier}.terraform.tfstate"
     region         = local.inputs.names.region
     encrypt        = true
-    dynamodb_table = local.identifier
+    dynamodb_table = local.unit_identifier
     profile        = local.inputs.profile
   }
 }

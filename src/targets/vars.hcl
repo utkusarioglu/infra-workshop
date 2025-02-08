@@ -13,9 +13,9 @@ inputs = {
   devcontainer_pass = "catdog"
 
   /*
-      These produce identifiers for what region, environment, unit vs the 
-      code is acting on
-    */
+    These produce identifiers for what region, environment, unit vs the 
+    code is acting on
+  */
   module_src_relpath = local.module_src_relpath
   names = merge(
     local.module_src_relpath_names,
@@ -30,12 +30,15 @@ inputs = {
   )
 
   /*
-      Paths that are relevant to tg and tf
-    */
+    Paths that are relevant to tg and tf
+  */
   abspath = {
     modules                 = join("/", [get_repo_root(), get_env("MODULES_RELPATH")])
     config                  = join("/", [get_repo_root(), get_env("CONFIG_RELPATH")])
-    kube_artifacts          = join("/", [get_repo_root(), get_env("KUBE_ARTIFACTS_RELPATH")])
     terragrunt_download_dir = join("/", [get_repo_root(), get_env("TERRAGRUNT_DOWNLOAD_DIR_RELPATH")])
+    artifacts = {
+      base = join("/", [get_repo_root(), "artifacts"])
+      kube = join("/", [get_repo_root(), get_env("KUBE_ARTIFACTS_RELPATH")])
+    }
   }
 }
