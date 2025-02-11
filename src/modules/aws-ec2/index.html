@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>😽</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      h1 {
+        line-height: 100svh;
+        font-size: 50px;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <h1>😻meow😼</h1>
+
+    <script>
+      let color = 0;
+      setInterval(() => {
+        color++;
+        bgColor = color % 255;
+        textColor = (color + 100) % 255;
+        document.body.style.setProperty("background-color", `hsl(${bgColor}, 100%, 70%)`);
+        document.body.style.setProperty("color", `hsl(${textColor}, 100%, 30%)`);
+      }, 100);
+    </script>
+  </body>
+
+</html>

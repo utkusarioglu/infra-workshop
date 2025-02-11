@@ -1,9 +1,14 @@
-output "ssh_connection_string" {
-  description = "SSH connection string to access the instance"
-  value       = "ssh -i artifacts/private-key.pem ec2-user@${aws_instance.bird.public_ip}"
+output "ssh" {
+  description = "Connect through SSH DNS"
+  value       = "ssh -i artifacts/private-key.pem ec2-user@${aws_route53_record.subdomain.name}"
 }
 
-output "web_address" {
+output "ip" {
   description = "Visit the website here"
   value       = "http://${aws_instance.bird.public_ip}"
+}
+
+output "dns" {
+  description = "Visit the website here"
+  value       = "http://${aws_route53_record.subdomain.name}"
 }

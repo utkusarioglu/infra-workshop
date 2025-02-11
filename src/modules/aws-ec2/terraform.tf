@@ -66,6 +66,7 @@ data "aws_ami" "lion" {
   }
 }
 
+# Done
 resource "aws_instance" "bird" {
   ami                         = data.aws_ami.lion.id
   instance_type               = var.instance_type
@@ -76,6 +77,7 @@ resource "aws_instance" "bird" {
   monitoring                  = true
   user_data                   = file("user-data.aws.sh")
   tags                        = var.tags
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
 
   instance_market_options {
     market_type = "spot"
@@ -106,4 +108,125 @@ resource "null_resource" "ssh_private_key_chmod" {
   provisioner "local-exec" {
     command = "chmod 600 ${local.ssh_private_key_abspath}"
   }
+}
+
+data "aws_route53_zone" "domain" {
+  name = "utkusarioglu.com."
+}
+
+resource "aws_route53_record" "subdomain" {
+  zone_id = data.aws_route53_zone.domain.zone_id
+  name    = "vanilla.${data.aws_route53_zone.domain.name}"
+  type    = "A"
+  ttl     = 3600
+  records = [aws_instance.bird.public_ip]
+}
+
+# Done
+resource "aws_s3_bucket" "files" {
+  bucket = local.bucket
+}
+
+# Done
+resource "aws_s3_bucket_ownership_controls" "private_bucket_ownership" {
+  bucket = aws_s3_bucket.files.id
+
+  rule {
+    object_ownership = "ObjectWriter"
+  }
+}
+
+# Done
+resource "aws_s3_bucket_acl" "private_bucket_acl" {
+  bucket = aws_s3_bucket.files.id
+  acl    = "private"
+
+  depends_on = [aws_s3_bucket_ownership_controls.private_bucket_ownership]
+}
+
+# Done
+resource "aws_s3_bucket_policy" "private_bucket_policy" {
+  bucket = aws_s3_bucket.files.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Deny"
+        Principal = "*"
+        Action    = "s3:*"
+        Resource = [
+          "arn:aws:s3:::${aws_s3_bucket.files.id}",
+          "arn:aws:s3:::${aws_s3_bucket.files.id}/*"
+        ]
+        Condition = {
+          Bool = {
+            "aws:SecureTransport" = "false"
+          }
+        }
+      },
+      {
+        Effect = "Allow"
+        Principal = {
+          AWS = aws_iam_role.ec2_s3_read_role.arn
+        }
+        Action   = "s3:GetObject"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.files.id}/*"
+      }
+    ]
+  })
+}
+
+
+resource "aws_s3_object" "my_file" {
+  bucket = aws_s3_bucket.files.id
+  key    = "index.html" # Path in the bucket
+  source = "index.html" # Local file to upload
+}
+
+# Done
+resource "aws_iam_role" "ec2_s3_read_role" {
+  name = "ec2_s3_read_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+# Done
+resource "aws_iam_policy" "s3_read_policy" {
+  name        = "s3_read_policy"
+  description = "Allow EC2 to read from S3"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "s3:GetObject"
+        Resource = "arn:aws:s3:::${aws_s3_bucket.files.id}/*"
+      }
+    ]
+  })
+}
+
+# Done
+resource "aws_iam_role_policy_attachment" "s3_read_attach" {
+  role       = aws_iam_role.ec2_s3_read_role.name
+  policy_arn = aws_iam_policy.s3_read_policy.arn
+}
+
+# Done
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2_s3_profile"
+  role = aws_iam_role.ec2_s3_read_role.name
 }
