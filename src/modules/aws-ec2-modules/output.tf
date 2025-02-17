@@ -10,5 +10,5 @@ output "ip" {
 
 output "dns" {
   description = "Visit the website here"
-  value       = "http://${module.records.route53_record_name["${local.subdomain} A"]}"
+  value       = "https://${module.records.route53_record_name["${local.subdomain} A"]}"
 }

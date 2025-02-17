@@ -3,6 +3,30 @@
   "tasks": [
     {
       "type": "shell",
+      "label": "Run all",
+      "detail": "Runs a terragrunt command",
+      "command": "terragrunt",
+      "args": [
+        "run-all",
+        "${input:runAllCommand}",
+        "--terragrunt-working-dir=src/targets/${input:target}",
+        "--terragrunt-non-interactive"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "icon": {
+        "color": "terminal.ansiBlue",
+        "id": "arrow-circle-right"
+      }
+    },
+    {
+      "type": "shell",
       "label": "Apply",
       "detail": "Execute `terragrunt run-all apply` on a target",
       "command": "terragrunt",
@@ -64,6 +88,11 @@
         "aws/dev/us-east-1"
       ],
       "default": "k3d/dev/local",
+    },
+    {
+      "id": "runAllCommand",
+      "description": "Run all command to execute",
+      "type": "promptString"
     }
   ]
 }

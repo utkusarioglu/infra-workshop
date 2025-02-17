@@ -75,9 +75,13 @@ resource "aws_instance" "bird" {
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.cat.id
   monitoring                  = true
-  user_data                   = file("user-data.aws.sh")
-  tags                        = var.tags
-  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
+  user_data = templatefile("user-data.aws.sh", {
+    bucket        = local.bucket
+    email_address = local.email_address
+    domain_name   = "${local.subdomain}.${data.aws_route53_zone.domain.name}"
+  })
+  tags                 = var.tags
+  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
   instance_market_options {
     market_type = "spot"
@@ -116,7 +120,7 @@ data "aws_route53_zone" "domain" {
 
 resource "aws_route53_record" "subdomain" {
   zone_id = data.aws_route53_zone.domain.zone_id
-  name    = "vanilla.${data.aws_route53_zone.domain.name}"
+  name    = "${local.subdomain}.${data.aws_route53_zone.domain.name}"
   type    = "A"
   ttl     = 3600
   records = [aws_instance.bird.public_ip]

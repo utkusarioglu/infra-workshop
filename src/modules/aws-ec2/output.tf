@@ -1,6 +1,11 @@
-output "ssh" {
+output "ssh-dns" {
   description = "Connect through SSH DNS"
   value       = "ssh -i artifacts/private-key.pem ec2-user@${aws_route53_record.subdomain.name}"
+}
+
+output "ssh-ip" {
+  description = "Connect through SSH DNS"
+  value       = "ssh -i artifacts/private-key.pem ec2-user@${aws_instance.bird.public_ip}"
 }
 
 output "ip" {
@@ -10,5 +15,5 @@ output "ip" {
 
 output "dns" {
   description = "Visit the website here"
-  value       = "http://${aws_route53_record.subdomain.name}"
+  value       = "https://${aws_route53_record.subdomain.name}"
 }

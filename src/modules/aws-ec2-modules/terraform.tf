@@ -59,7 +59,9 @@ module "ec2_instance" {
   name                 = "dog"
   instance_type        = var.instance_type
   user_data = templatefile("provisioning.sh", {
-    bucket = local.bucket
+    bucket        = local.bucket
+    email_address = "utkusarioglu@hotmail.com"
+    domain_name   = module.acm.distinct_domain_names[0]
   })
   monitoring                  = true
   associate_public_ip_address = true
@@ -159,4 +161,47 @@ module "iam_policy" {
     }]
   })
   tags = var.tags
+}
+
+data "aws_route53_zone" "this" {
+  name = "utkusarioglu.com."
+}
+
+module "acm" {
+  source = "terraform-aws-modules/acm/aws"
+
+  domain_name = "${local.subdomain}.utkusarioglu.com"
+  # zone_id                   = module.route53.route53_zone_zone_id["example.com"]
+  zone_id           = data.aws_route53_zone.this.zone_id
+  validation_method = "DNS"
+
+  # subject_alternative_names = ["www.sub.example.com"]
+  wait_for_validation = true
+}
+
+# module "public_key" {
+#   source = "terraform-aws-modules/s3-bucket/aws//modules/object"
+
+#   bucket  = module.s3_bucket.s3_bucket_id
+#   key     = "crt.pem"
+#   content = module.key_pair.public_key_pem
+# }
+
+# module "private_key" {
+#   source = "terraform-aws-modules/s3-bucket/aws//modules/object"
+
+#   bucket  = module.s3_bucket.s3_bucket_id
+#   key     = "key.pem"
+#   content = module.key_pair.private_key_pem
+# }
+
+module "nginx_conf" {
+  source = "terraform-aws-modules/s3-bucket/aws//modules/object"
+
+  bucket = module.s3_bucket.s3_bucket_id
+  key    = "nginx.conf"
+  # file_source = "nginx.conf"
+  content = templatefile("nginx.tpl.conf", {
+    domain_name = module.acm.distinct_domain_names[0]
+  })
 }
