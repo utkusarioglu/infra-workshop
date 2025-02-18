@@ -1,7 +1,10 @@
 locals {
   module_src_relpath          = split("${get_env("TARGETS_RELPATH")}/", get_original_terragrunt_dir())[1]
   module_src_relpath_segments = split("/", local.module_src_relpath)
-  module_src_relpath_names    = zipmap(["platform", "environment", "region", "unit"], local.module_src_relpath_segments)
+  module_src_relpath_names = zipmap(
+    ["platform", "environment", "region", "label", "unit"],
+    local.module_src_relpath_segments
+  )
   region_shorts = {
     "eu-central-1" = "euc1",
     "us-east-1"    = "use1"

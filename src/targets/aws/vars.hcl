@@ -12,6 +12,7 @@ locals {
         Region       = local.parent.names.region
         RegionShort  = local.parent.names.region_short
         Environment  = local.parent.names.environment
+        Label        = local.parent.names.label
         Unit         = local.parent.names.unit
       }
     }

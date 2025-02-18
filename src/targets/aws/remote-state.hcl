@@ -4,13 +4,13 @@ locals {
   region_identifier = join("-", matchkeys(
     values(local.inputs.names),
     keys(local.inputs.names),
-    ["cluster_short", "platform", "environment", "region_short"]
+    ["cluster_short", "platform", "environment", "region_short", "label"]
   ))
 
   unit_identifier = join("-", matchkeys(
     values(local.inputs.names),
     keys(local.inputs.names),
-    ["cluster_short", "platform", "environment", "region_short", "unit"]
+    ["cluster_short", "platform", "environment", "region_short", "label", "unit"]
   ))
 }
 

@@ -10,7 +10,9 @@
         "run-all",
         "${input:runAllCommand}",
         "--terragrunt-working-dir=src/targets/${input:target}",
-        "--terragrunt-non-interactive"
+        "--terragrunt-non-interactive",
+        "--terragrunt-provider-cache",
+        "--terragrunt-provider-cache-dir=artifacts/provider-cache"
       ],
       "presentation": {
         "echo": true,
@@ -34,7 +36,9 @@
         "run-all",
         "apply",
         "--terragrunt-working-dir=src/targets/${input:target}",
-        "--terragrunt-non-interactive"
+        "--terragrunt-non-interactive",
+        "--terragrunt-provider-cache",
+        "--terragrunt-provider-cache-dir=artifacts/provider-cache"
       ],
       "group": "build",
       "presentation": {
@@ -59,7 +63,9 @@
         "run-all", 
         "destroy", 
         "--terragrunt-working-dir=src/targets/${input:target}", 
-        "--terragrunt-non-interactive"
+        "--terragrunt-non-interactive",
+        "--terragrunt-provider-cache",
+        "--terragrunt-provider-cache-dir=artifacts/provider-cache"
       ],
       "group": "build",
       "presentation": {
@@ -82,10 +88,11 @@
       "description": "Target to run",
       "type": "pickString",
       "options": [
-        "k3d/dev/local",
-        "aws/dev/eu-central-1",
-        "aws/dev/us-west-1",
-        "aws/dev/us-east-1"
+        "k3d/dev/local/default",
+        "aws/dev/eu-central-1/vpc",
+        "aws/dev/us-west-1/prov",
+        "aws/dev/us-east-1/mod",
+        "aws/dev/us-east-1/cont"
       ],
       "default": "k3d/dev/local",
     },
