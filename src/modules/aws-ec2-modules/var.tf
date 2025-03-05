@@ -13,6 +13,11 @@ variable "abspath_artifacts_base" {
   type        = string
 }
 
+variable "abspath_assets_base" {
+  description = "The path to find assets"
+  type        = string
+}
+
 variable "tags" {
   description = "Tag given to each deployed Instance"
   type = object({

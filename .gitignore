@@ -1,2 +1,5 @@
 scripts/.old
 artifacts
+.env
+.secret_*
+.secrets

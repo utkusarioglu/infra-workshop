@@ -40,16 +40,6 @@ module "ssh" {
   tags                = var.tags
 }
 
-# data "aws_ami" "ec2" {
-#   most_recent = true
-#   owners      = ["amazon"]
-
-#   filter {
-#     name   = "name"
-#     values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-#   }
-# }
-
 module "ec2_instance" {
   source = "terraform-aws-modules/ec2-instance/aws"
 
@@ -58,8 +48,8 @@ module "ec2_instance" {
   spot_type            = "persistent"
   name                 = "dog"
   instance_type        = var.instance_type
-  user_data = templatefile("provisioning.sh", {
-    bucket        = local.bucket
+  user_data = templatefile("user-data.sh", {
+    bucket_id     = local.bucket_id
     email_address = "utkusarioglu@hotmail.com"
     domain_name   = module.acm.distinct_domain_names[0]
   })
@@ -123,7 +113,7 @@ module "records" {
 module "s3_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
 
-  bucket = local.bucket
+  bucket = local.bucket_id
   acl    = "private"
 
   control_object_ownership = true
@@ -135,15 +125,14 @@ module "s3_bucket" {
   tags = var.tags
 }
 
-module "object" {
+module "static_objects" {
   source = "terraform-aws-modules/s3-bucket/aws//modules/object"
 
+  for_each    = fileset(local.abspath_assets_page_static, "*")
   bucket      = module.s3_bucket.s3_bucket_id
-  key         = "index.html"
-  file_source = "index.html"
+  key         = each.key
+  file_source = join("/", [local.abspath_assets_page_static, each.key])
   tags        = var.tags
-  #  content = file("README.md")
-  # content_base64 = filebase64("index.html")
 }
 
 module "iam_policy" {
@@ -157,7 +146,7 @@ module "iam_policy" {
     Statement = [{
       Effect   = "Allow"
       Action   = ["s3:GetObject"]
-      Resource = "arn:aws:s3:::${local.bucket}/*"
+      Resource = "arn:aws:s3:::${local.bucket_id}/*"
     }]
   })
   tags = var.tags
@@ -170,38 +159,9 @@ data "aws_route53_zone" "this" {
 module "acm" {
   source = "terraform-aws-modules/acm/aws"
 
-  domain_name = "${local.subdomain}.utkusarioglu.com"
-  # zone_id                   = module.route53.route53_zone_zone_id["example.com"]
+  domain_name       = "${local.subdomain}.utkusarioglu.com"
   zone_id           = data.aws_route53_zone.this.zone_id
   validation_method = "DNS"
 
-  # subject_alternative_names = ["www.sub.example.com"]
   wait_for_validation = true
-}
-
-# module "public_key" {
-#   source = "terraform-aws-modules/s3-bucket/aws//modules/object"
-
-#   bucket  = module.s3_bucket.s3_bucket_id
-#   key     = "crt.pem"
-#   content = module.key_pair.public_key_pem
-# }
-
-# module "private_key" {
-#   source = "terraform-aws-modules/s3-bucket/aws//modules/object"
-
-#   bucket  = module.s3_bucket.s3_bucket_id
-#   key     = "key.pem"
-#   content = module.key_pair.private_key_pem
-# }
-
-module "nginx_conf" {
-  source = "terraform-aws-modules/s3-bucket/aws//modules/object"
-
-  bucket = module.s3_bucket.s3_bucket_id
-  key    = "nginx.conf"
-  # file_source = "nginx.conf"
-  content = templatefile("nginx.tpl.conf", {
-    domain_name = module.acm.distinct_domain_names[0]
-  })
 }

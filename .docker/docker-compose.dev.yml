@@ -6,8 +6,9 @@ services:
       CLUSTER_HOSTNAME: infra-workshop.utkusarioglu.com
 
       HOST_ROOT: $PWD
-      NODE_VOLUME_ROOT: /dev/xvdf
-      HOST_VOLUME_RELPATH: artifacts/volumes
+
+      K3D_NODE_VOLUME_ROOT: /dev/xvdf
+      K3D_HOST_VOLUME_RELPATH: artifacts/volumes
 
       MODULES_RELPATH: src/modules
       CONFIG_RELPATH: src/config

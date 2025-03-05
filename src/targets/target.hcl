@@ -21,4 +21,9 @@ terraform {
     commands = ["validate"]
     execute  = ["sh", "-c", "tflint --config=.tflint.hcl -f default"]
   }
+
+  before_hook "output things" {
+    commands = ["validate"]
+    execute  = ["echo", jsonencode(local.inputs)]
+  }
 }

@@ -12,18 +12,3 @@ generate "provider_aws" {
     }
   EOF
 }
-
-# generate "required_provider_aws" {
-#   path      = "required-provider.aws.tf"
-#   if_exists = "overwrite_terragrunt"
-#   contents  = <<-EOF
-#     terraform {
-#       required_providers {
-#         aws = {
-#           source = "hashicorp/aws"
-#           version = "5.84.0"
-#         }
-#       }
-#     }
-#   EOF
-# }

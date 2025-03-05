@@ -3,7 +3,7 @@
   "tasks": [
     {
       "type": "shell",
-      "label": "Run all",
+      "label": "Terragrunt Run all",
       "detail": "Runs a terragrunt command",
       "command": "terragrunt",
       "args": [
@@ -27,60 +27,6 @@
         "id": "arrow-circle-right"
       }
     },
-    {
-      "type": "shell",
-      "label": "Apply",
-      "detail": "Execute `terragrunt run-all apply` on a target",
-      "command": "terragrunt",
-      "args": [
-        "run-all",
-        "apply",
-        "--terragrunt-working-dir=src/targets/${input:target}",
-        "--terragrunt-non-interactive",
-        "--terragrunt-provider-cache",
-        "--terragrunt-provider-cache-dir=artifacts/provider-cache"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": false,
-        "clear": false
-      },
-      "icon": {
-        "id": "play",
-        "color": "terminal.ansiGreen"
-      },
-    },
-    {
-      "type": "shell",
-      "label": "Destroy",
-      "detail": "Execute `terragrunt run-all destroy` on a target",
-      "command": "terragrunt",
-      "args": [
-        "run-all", 
-        "destroy", 
-        "--terragrunt-working-dir=src/targets/${input:target}", 
-        "--terragrunt-non-interactive",
-        "--terragrunt-provider-cache",
-        "--terragrunt-provider-cache-dir=artifacts/provider-cache"
-      ],
-      "group": "build",
-      "presentation": {
-        "echo": true,
-        "reveal": "always",
-        "focus": false,
-        "panel": "dedicated",
-        "showReuseMessage": false,
-        "clear": false
-      },
-      "icon": {
-        "color": "terminal.ansiRed",
-        "id": "stop"
-      }
-    }
   ],
   "inputs": [
     {
@@ -90,6 +36,7 @@
       "options": [
         "k3d/dev/local/default",
         "aws/dev/eu-central-1/vpc",
+        "aws/dev/eu-central-1/eks1",
         "aws/dev/us-west-1/prov",
         "aws/dev/us-east-1/mod",
         "aws/dev/us-east-1/cont"
@@ -99,7 +46,15 @@
     {
       "id": "runAllCommand",
       "description": "Run all command to execute",
-      "type": "promptString"
+      "type": "pickString",
+      "options": [
+        "apply",
+        "plan",
+        "init",
+        "destroy",
+        "validate"
+      ],
+      "default": "plan"
     }
   ]
 }

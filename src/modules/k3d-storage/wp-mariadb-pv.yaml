@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata: 
+  name: wordpress-mariadb-${node_index}
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  # storageClassName: mariadb
+  persistentVolumeReclaimPolicy: Delete
+  claimRef:
+    namespace: default
+    name: data-wordpress-mariadb-${node_index}
+  local:
+    path: ${default_volume_path}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - key: kubernetes.io/hostname=worker-${node_index}

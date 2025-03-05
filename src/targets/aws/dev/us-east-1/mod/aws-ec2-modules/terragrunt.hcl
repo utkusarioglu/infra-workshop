@@ -23,4 +23,5 @@ inputs = {
   instance_type          = "t3.micro"
   cidr_block             = "10.0.0.0/16"
   abspath_artifacts_base = local.inputs.abspath.artifacts.base
+  abspath_assets_base    = local.inputs.abspath.assets.base
 }

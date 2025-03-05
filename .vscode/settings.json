@@ -4,12 +4,12 @@
     {
       "match": "\\.tf$",
       "isAsync": true,
-      "command": "terraform fmt -recursive"
+      "command": "terraform fmt ${file}"
     },
     {
       "match": "\\.tfvars$",
       "isAsync": true,
-      "command": "terraform fmt -recursive"
+      "command": "terraform fmt ${file}"
     },
     {
       "match": "\\.hcl$",
@@ -27,5 +27,5 @@
       "isAsync": true,
       "command": "gh secret set -f .env"
     }
-  ],
+  ]
 }

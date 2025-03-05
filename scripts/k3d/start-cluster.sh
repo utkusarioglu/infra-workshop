@@ -1,28 +1,18 @@
 #!/bin/bash
 
-set -euo pipefail
+set -euxo pipefail
 bash --version
 
-ENVS=(
-  HOST_ROOT
-  HOST_VOLUME_RELPATH
-)
-. /home/dev/scripts/utils/check-envs.sh
 ARGS=(
   cluster_name
-  cluster_config_path
-  host_volume_relpath
+  k3d_config_relpath
   k3d_cluster_region
   k3d_cluster_hostname
+  k3d_host_volume_root
 )
 . /home/dev/scripts/utils/parse-args.sh
 
-repo_volume_relpath="${HOST_VOLUME_RELPATH}/${host_volume_relpath}"
-mkdir -p ${repo_volume_relpath}
-
-terragrunt_host_volume_root="${HOST_ROOT}/${repo_volume_relpath}"
-
-export TERRAGRUNT_HOST_VOLUME_ROOT="${terragrunt_host_volume_root}"
+export K3D_HOST_VOLUME_ROOT="${k3d_host_volume_root}"
 export K3D_CLUSTER_REGION="${k3d_cluster_region}"
 export K3D_CLUSTER_HOSTNAME="${k3d_cluster_hostname}"
 
@@ -39,11 +29,11 @@ if [ $cluster_count -gt 1 ]; then
   echo "Halting operation to prevent data loss."
   exit 2
 elif [ $cluster_count -lt 1 ]; then
-  echo "Config file at '${cluster_config_path}':"
-  cat $cluster_config_path | yq
+  echo "Config file at '${k3d_config_relpath}':"
+  cat $k3d_config_relpath | yq
 
   echo "Creating cluster '$cluster_name'…"
-  k3d cluster create -c "$cluster_config_path"
+  k3d cluster create -c "$k3d_config_relpath"
   exit 0 
 fi
 

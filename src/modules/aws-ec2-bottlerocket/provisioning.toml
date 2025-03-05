@@ -1,0 +1,8 @@
+[settings.host-containers.admin]
+enabled = true
+
+[settings.containerd]
+enabled = true
+
+[settings.containerd.defaults]
+source = "docker.io/nginx:latest"
