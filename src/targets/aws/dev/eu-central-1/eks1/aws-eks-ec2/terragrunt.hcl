@@ -2,8 +2,12 @@ include "provider_aws" {
   path = find_in_parent_folders("provider.aws.hcl")
 }
 
-include "provider_helm" {
-  path = find_in_parent_folders("provider.helm.hcl")
+# include "provider_helm" {
+#   path = find_in_parent_folders("provider.helm.hcl")
+# }
+
+include "provider_http" {
+  path = find_in_parent_folders("provider.http.hcl")
 }
 
 include "remote_state" {

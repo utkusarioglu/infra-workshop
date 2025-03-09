@@ -1,13 +1,36 @@
-dependency "aws_eks_ec2" {
-  config_path = "../aws-eks-ec2"
+dependencies {
+  paths = [
+    "../aws-eks-ec2",
+    "../aws-k8s"
+  ]
 }
 
-include "provider_kubernetes" {
-  path = find_in_parent_folders("provider.kubernetes.hcl")
+# dependency "aws_eks_ec2" {
+#   config_path                             = "../aws-eks-ec2"
+#   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
+#   mock_outputs = {
+#     # vpc_security_group_id = "sg-1234"
+#   }
+# }
+
+dependency "aws_k8s" {
+  config_path                             = "../aws-k8s"
+  mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
+  mock_outputs = {
+    alb_security_group_id = "mock"
+  }
 }
 
-include "provider_helm" {
-  path = find_in_parent_folders("provider.helm.hcl")
+# include "provider_kubernetes" {
+#   path = find_in_parent_folders("provider.kubernetes.hcl")
+# }
+
+include "provider_aws" {
+  path = find_in_parent_folders("provider.aws.hcl")
+}
+
+include "provider_aws_k8s_helm" {
+  path = find_in_parent_folders("provider.aws-k8s-helm.hcl")
 }
 
 include "remote_state" {
@@ -18,14 +41,6 @@ include "target" {
   path = find_in_parent_folders("target.hcl")
 }
 
-locals {
-  inputs = read_terragrunt_config(find_in_parent_folders("vars.hcl")).inputs
-}
-
 inputs = {
-  # region       = local.inputs.id.dash.region
-  # app_name     = local.inputs.names.cluster_short
-  # cluster_name = local.inputs.names.cluster
-  # vpc_id       = dependency.aws_eks_ec2.outputs.vpc_id
-  # aws_region   = local.inputs.names.region
+  security_group_id = dependency.aws_k8s.outputs.alb_security_group_id
 }
