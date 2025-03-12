@@ -1,37 +1,29 @@
-# deploy 'external-dns' service
 resource "helm_release" "external_dns" {
-  name       = local.external_dns_chart_name
-  chart      = local.external_dns_chart_name
-  repository = local.external_dns_chart_repo
-  version    = local.external_dns_chart_version
+  name       = "external-dns"
+  chart      = "external-dns"
+  repository = "https://kubernetes-sigs.github.io/external-dns/"
+  version    = "1.15.2"
   namespace  = "kube-system"
 
-  dynamic "set" {
-    for_each = local.external_dns_values
-
-    content {
-      name  = set.key
-      value = set.value
-      type  = "string"
-    }
-  }
-
-  set {
-    # name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    name = join(".", [
-      "serviceAccount.annotations",
-      replace("eks.amazonaws.com/role-arn", ".", "\\.")
-    ])
-    value = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.external_dns_iam_role}"
-  }
-
-  set {
-    name  = "domainFilters"
-    value = "{${local.dns_base_domain}}"
-  }
-
-  set {
-    name  = "txtOwnerId"
-    value = data.aws_route53_zone.base_domain.zone_id
-  }
+  values = [
+    jsonencode({
+      domainFilters = [
+        local.dns_base_domain
+      ]
+      txtOwnerId         = data.aws_route53_zone.base_domain.zone_id
+      logLevel           = "info"
+      logFormat          = "json"
+      triggerLoopOnEvent = "true"
+      internal           = "5m"
+      policy             = "sync"
+      sources = [
+        "ingress"
+      ]
+      serviceAccount = {
+        annotations = {
+          "eks.amazonaws.com/role-arn" = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.external_dns_iam_role}"
+        }
+      }
+    })
+  ]
 }

@@ -1,38 +1,3 @@
-
-
-# module "records" {
-#   source  = "terraform-aws-modules/route53/aws//modules/records"
-#   version = "~> 3.0"
-
-#   zone_name = "utkusarioglu.com."
-
-#   records = [
-#     {
-#       name = "eks1"
-#       type = "CNAME"
-#       ttl  = 3600
-#       # records = ["k8s-default-wordpres-5f6c3281fb-664498526.eu-central-1.elb.amazonaws.com"]
-#       records = ["k8s-default-wordpres-5f6c3281fb-1553719264.eu-central-1.elb.amazonaws.com"]
-#     },
-#   ]
-# }
-
-
-
-# resource "aws_route53_record" "wordpress" {
-#   zone_id = aws_route53_zone.example.zone_id
-#   name    = "wordpress.example.com"
-#   type    = "A"
-
-#   alias {
-#     name                   = aws_lb.wordpress.dns_name
-#     zone_id                = aws_lb.wordpress.zone_id
-#     evaluate_target_health = true
-#   }
-# }
-
-
-
 resource "helm_release" "wordpress" {
   name            = "wordpress"
   namespace       = "default"
@@ -69,13 +34,9 @@ resource "helm_release" "wordpress" {
       ingress = {
         enabled = true
 
-        /*
-         * these are aws specific
-         */
         ingressClassName = "alb"
         hostname         = local.hostname
         path             = "/*"
-        # pathType         = "Prefix"
         annotations = {
           "kubernetes.io/ingress.class"                        = "alb"
           "alb.ingress.kubernetes.io/scheme"                   = "internet-facing"
@@ -86,9 +47,6 @@ resource "helm_release" "wordpress" {
           "alb.ingress.kubernetes.io/security-groups"          = join(",", [var.security_group_id])
           "alb.ingress.kubernetes.io/certificate-arn"          = module.cert.acm_certificate_arn
           "external-dns.alpha.kubernetes.io/hostname"          = local.hostname
-
-          # "alb.ingress.kubernetes.io/group.name" : "nextjs-grpc"
-          # "alb.ingress.kubernetes.io/load-balancer-name" : "nextjs-grpc"
         }
       }
     })

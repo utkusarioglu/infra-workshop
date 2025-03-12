@@ -20,10 +20,3 @@ locals {
 }
 
 inputs = local.inputs
-
-# terraform {
-#   after_hook "ssh_private_key" {
-#     commands = ["apply"]
-#     execute  = ["echo", outputs.ssh_private_key, "> private-key.pem"]
-#   }
-# }

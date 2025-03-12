@@ -1,21 +1,17 @@
-include "provider_aws" {
-  path = find_in_parent_folders("provider.aws.hcl")
-}
-
-# include "provider_helm" {
-#   path = find_in_parent_folders("provider.helm.hcl")
-# }
-
-include "provider_http" {
-  path = find_in_parent_folders("provider.http.hcl")
-}
-
 include "remote_state" {
   path = find_in_parent_folders("remote-state.hcl")
 }
 
 include "target" {
   path = find_in_parent_folders("target.hcl")
+}
+
+include "provider_aws" {
+  path = find_in_parent_folders("provider.aws.hcl")
+}
+
+include "provider_http" {
+  path = find_in_parent_folders("provider.http.hcl")
 }
 
 locals {
@@ -25,17 +21,8 @@ locals {
 inputs = {
   cluster_name = local.inputs.names.cluster
   region       = local.inputs.names.region
-  # cluster_code = local.inputs.names.cluster_short
-  tags = local.inputs.tags
-
-  # availability_zone      = "${local.inputs.names.region}a"
-  # key_pair_name          = "some-key-pair"
-  # instance_type          = "t3.micro"
-  # cidr_block             = "10.0.0.0/16"
-  # abspath_artifacts_base = local.inputs.abspath.artifacts.base
+  tags         = local.inputs.tags
 }
-
-
 
 terraform {
   after_hook "eks_kubeconfig_register" {
