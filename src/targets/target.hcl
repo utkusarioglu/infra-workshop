@@ -19,7 +19,7 @@ terraform {
 
   after_hook "tflint_validate" {
     commands = ["validate"]
-    execute  = ["sh", "-c", "tflint --config=.tflint.hcl -f default"]
+    execute  = ["sh", "-c", "tflint --config=${get_repo_root()}/.tflint.hcl -f default"]
   }
 
   before_hook "output things" {

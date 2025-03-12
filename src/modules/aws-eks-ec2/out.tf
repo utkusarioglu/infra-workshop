@@ -5,3 +5,11 @@ output "vpc_id" {
 output "alb_security_group_id" {
   value = module.sg_web.security_group_id
 }
+
+# output "selected_azs" {
+#   value = local.azs
+# }
+
+# output "all_azs" {
+#   value = data.aws_availability_zones.available.names
+# }

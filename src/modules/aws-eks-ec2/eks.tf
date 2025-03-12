@@ -75,6 +75,7 @@ module "eks" {
       iam_role_additional_policies = {
         Alb = aws_iam_policy.alb.arn
         EC2 = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+        Asg = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
       }
 
       # This is not required - demonstrates how to pass additional configuration
@@ -98,3 +99,44 @@ module "eks" {
     }
   }
 }
+
+resource "aws_autoscaling_policy" "cpu_scale_out" {
+  name        = "default-group"
+  policy_type = "TargetTrackingScaling"
+  # autoscaling_group_name = "default"
+  autoscaling_group_name = module.eks.eks_managed_node_groups_autoscaling_group_names[0]
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 70 # Scale out when CPU usage > 70%
+  }
+}
+
+# module "asg" {
+#   source = "terraform-aws-modules/autoscaling/aws"
+
+#   name                = "eks-asg"
+#   use_name_prefix     = false
+#   min_size           = 1
+#   max_size           = 5
+#   desired_capacity   = 2
+#   wait_for_capacity_timeout = "0"
+
+#   # Link the Auto Scaling Group Name from EKS
+#   autoscaling_group_name = module.eks.eks_managed_node_groups_autoscaling_group_names["default"]
+
+#   scaling_policies = {
+#     scale-out = {
+#       policy_type            = "TargetTrackingScaling"
+#       estimated_instance_warmup = 180
+#       target_tracking_configuration = {
+#         predefined_metric_specification = {
+#           predefined_metric_type = "ASGAverageCPUUtilization"
+#         }
+#         target_value = 70  # Scale out when CPU utilization > 70%
+#       }
+#     }
+#   }
+# }

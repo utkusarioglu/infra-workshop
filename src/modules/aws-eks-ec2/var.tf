@@ -2,9 +2,9 @@ variable "cluster_name" {
   type = string
 }
 
-variable "region" {
-  type = string
-}
+# variable "region" {
+#   type = string
+# }
 
 variable "tags" {
   description = "Tag given to each deployed Instance"

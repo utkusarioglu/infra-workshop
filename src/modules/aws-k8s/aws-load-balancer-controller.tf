@@ -54,6 +54,7 @@ resource "helm_release" "aws_load_balancer_controller" {
   atomic          = true
   wait            = true
   cleanup_on_fail = true
+  wait_for_jobs   = true
 
   values = [
     yamlencode({
