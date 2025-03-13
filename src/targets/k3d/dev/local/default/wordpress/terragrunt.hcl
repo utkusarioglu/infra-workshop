@@ -6,6 +6,10 @@ include "target" {
   path = find_in_parent_folders("target.hcl")
 }
 
+include "kubectl_api_resources_log" {
+  path = find_in_parent_folders("terragrunt/hooks/kubectl-api-resources-log.hcl")
+}
+
 dependencies {
   paths = [
     "../k3d-storage"
@@ -21,16 +25,5 @@ inputs = {
   aws_acm_certificate_arn = local.inputs.constants.MOCKED
   platform                = local.inputs.names.platform
   dns                     = local.inputs.dns
-}
-
-terraform {
-  after_hook "kubectl_api_resources_log" {
-    commands    = ["apply"]
-    working_dir = get_repo_root()
-    execute = [
-      "scripts/kubectl/log-api-resources.sh",
-      local.inputs.id.dash.region,
-      15
-    ]
-  }
+  annotations             = local.inputs.annotations
 }

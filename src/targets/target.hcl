@@ -23,8 +23,7 @@ terraform {
     execute     = ["sh", "-c", "tflint --config=./.tflint.hcl -f default"]
   }
 
-
-  before_hook "inputs_output" {
+  before_hook "echo_inputs" {
     commands    = ["validate"]
     working_dir = get_repo_root()
     execute = [

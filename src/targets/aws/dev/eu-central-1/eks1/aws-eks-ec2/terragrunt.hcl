@@ -27,12 +27,10 @@ inputs = {
 
 terraform {
   after_hook "eks_kubeconfig_register" {
-    commands = ["apply"]
+    commands    = ["apply"]
+    working_dir = get_repo_root()
     execute = [
-      join("/", [
-        get_repo_root(),
-        "scripts/eks/kubeconfig/update.sh",
-      ]),
+      "scripts/eks/kubeconfig/update.sh",
       local.inputs.names.cluster,
       local.inputs.names.region,
       local.inputs.profile
@@ -41,15 +39,25 @@ terraform {
   }
 
   after_hook "eks_kubeconfig_remove" {
-    commands = ["destroy"]
+    commands    = ["destroy"]
+    working_dir = get_repo_root()
     execute = [
-      join("/", [
-        get_repo_root(),
-        "scripts/eks/kubeconfig/remove.sh",
-      ]),
+      "scripts/eks/kubeconfig/remove.sh",
       local.inputs.names.cluster,
       local.inputs.names.region,
     ]
     run_on_error = false
+  }
+
+  after_hook "eks_ebs_delete" {
+    commands    = ["destroy"]
+    working_dir = get_repo_root()
+    execute = [
+      "scripts/ebs/delete-eks-ebs.sh",
+      local.inputs.names.region,
+      local.inputs.names.cluster,
+      local.inputs.profile,
+    ]
+    run_on_error = true
   }
 }

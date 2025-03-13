@@ -1,6 +1,7 @@
 locals {
   ingress_chart_values = {
     common = {
+      commonLabels = { for a in var.annotations : a.key => a.value }
     }
     k3d = {
       livenessProbe = {

@@ -64,6 +64,28 @@ locals {
     local._names_extra
   )
 
+  _k8s_prefix = "tag.repo.utkusarioglu.com"
+  _tags_meta = {
+    cluster       = local.names.cluster
+    cluster_short = local.names.cluster_short
+    platform      = local.names.platform
+    region        = local.names.region
+    region_short  = local.names.region_short
+    environment   = local.names.environment
+    label         = local.names.label
+    unit          = local.names.unit
+  }
+  tags = {
+    for k, v in local._tags_meta
+    : join("", [for s in split("_", k) : title(s)]) => v
+  }
+  annotations = [
+    for k, v in local._tags_meta : {
+      key   = join("/", [local._k8s_prefix, join("-", split("_", k))])
+      value = v
+    }
+  ]
+
   /*
     Paths that are relevant to tg and tf
   */
@@ -112,10 +134,12 @@ locals {
 }
 
 inputs = {
-  names     = local.names
-  abspath   = local.abspath
-  id        = local.id
-  secret    = local.secret
-  dns       = local.dns
-  constants = local.constants
+  names       = local.names
+  abspath     = local.abspath
+  id          = local.id
+  secret      = local.secret
+  dns         = local.dns
+  constants   = local.constants
+  tags        = local.tags
+  annotations = local.annotations
 }

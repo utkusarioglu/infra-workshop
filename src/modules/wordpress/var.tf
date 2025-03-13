@@ -23,15 +23,29 @@ variable "dns" {
   })
 }
 
-variable "tags" {
-  description = "Tag given to each deployed Instance"
-  type = object({
-    Cluster      = string
-    ClusterShort = string
-    Platform     = string
-    Region       = string
-    RegionShort  = string
-    Environment  = string
-    Unit         = string
-  })
+variable "annotations" {
+  description = "Annotations given to each deployed Instance"
+  # type        = any
+  type = list(object({
+    key   = string
+    value = string
+  }))
+  # type = object({
+  #   "tag.repo.utkusarioglu.com/cluster"       = string
+  #   "tag.repo.utkusarioglu.com/cluster-short" = string
+  #   "tag.repo.utkusarioglu.com/environment"   = string
+  #   "tag.repo.utkusarioglu.com/label"         = string
+  #   "tag.repo.utkusarioglu.com/platform"      = string
+  #   "tag.repo.utkusarioglu.com/region"        = string
+  #   "tag.repo.utkusarioglu.com/region-short"  = string
+  #   "tag.repo.utkusarioglu.com/unit"          = string
+  # })
 }
+
+# Cluster      = string
+# ClusterShort = string
+# Platform     = string
+# Region       = string
+# RegionShort  = string
+# Environment  = string
+# Unit         = string
