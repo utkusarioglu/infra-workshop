@@ -1,20 +1,23 @@
 {
   "remote.autoForwardPorts": false,
-   "runOnSave.commands": [
+  "runOnSave.commands": [
     {
-      "match": "\\.tf$",
+      // "match": "\\.tf$",
+      "languages": ["tf"],
       "isAsync": true,
       "command": "terraform fmt ${file}"
     },
     {
-      "match": "\\.tfvars$",
+      // "match": "\\.tfvars$",
+      "languages": ["tfvars"],
       "isAsync": true,
       "command": "terraform fmt ${file}"
     },
     {
-      "match": "\\.hcl$",
+      "notMatch": ".tflint.hcl",
+      "languages": ["hcl"],
       "isAsync": true,
-      "command": "terragrunt hclfmt ${file}"
+      "command": "cd ${fileDirname} && terragrunt hclfmt ${fileBasename}"
     },
     {
       "match": "\\.env(\\.\\w+)?$",

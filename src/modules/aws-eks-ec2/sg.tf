@@ -8,4 +8,6 @@ module "sg_web" {
     "https-443-tcp",
   ]
   ingress_cidr_blocks = ["0.0.0.0/0"]
+
+  tags = var.tags
 }

@@ -13,7 +13,7 @@ module "vpc" {
   single_nat_gateway   = true
 
   public_subnet_tags = merge(
-    local.tags,
+    var.tags,
     {
       "kubernetes.io/role/elb"                    = 1
       "kubernetes.io/cluster/${var.cluster_name}" = "owned"
@@ -21,7 +21,7 @@ module "vpc" {
   )
 
   private_subnet_tags = merge(
-    local.tags,
+    var.tags,
     {
       "kubernetes.io/role/internal-elb"           = 1
       "kubernetes.io/cluster/${var.cluster_name}" = "owned"
@@ -29,7 +29,7 @@ module "vpc" {
   )
 
   tags = merge(
-    local.tags,
+    var.tags,
     {
       "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     }

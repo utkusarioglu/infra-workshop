@@ -8,7 +8,7 @@ resource "helm_release" "external_dns" {
   values = [
     jsonencode({
       domainFilters = [
-        local.dns_base_domain
+        var.dns.base_domain
       ]
       txtOwnerId         = data.aws_route53_zone.base_domain.zone_id
       logLevel           = "info"

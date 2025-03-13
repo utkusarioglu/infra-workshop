@@ -1,15 +1,15 @@
-dependencies {
-  paths = [
-    "../k3d-cluster"
-  ]
-}
-
 include "provider_local_k8s_helm" {
   path = find_in_parent_folders("provider.local-k8s-helm.hcl")
 }
 
 include "target" {
   path = find_in_parent_folders("target.hcl")
+}
+
+dependencies {
+  paths = [
+    "../k3d-cluster"
+  ]
 }
 
 locals {

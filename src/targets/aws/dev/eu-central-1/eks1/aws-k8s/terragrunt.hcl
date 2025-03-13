@@ -19,7 +19,7 @@ dependency "aws_eks_ec2" {
 
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
   mock_outputs = {
-    vpc_id = "fake-vpc-id"
+    vpc_id = local.inputs.constants.MOCKED
   }
 }
 
@@ -28,8 +28,9 @@ locals {
 }
 
 inputs = {
-  region = local.inputs.names.region
-  # app_name     = local.inputs.names.cluster_short
+  region       = local.inputs.names.region
   cluster_name = local.inputs.names.cluster
   vpc_id       = dependency.aws_eks_ec2.outputs.vpc_id
+  dns          = local.inputs.dns
+  tags         = local.inputs.tags
 }

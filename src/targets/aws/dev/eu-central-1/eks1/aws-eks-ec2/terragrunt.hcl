@@ -20,6 +20,7 @@ locals {
 
 inputs = {
   cluster_name = local.inputs.names.cluster
+  platform     = local.inputs.names.platform
   region       = local.inputs.names.region
   tags         = local.inputs.tags
 }

@@ -98,6 +98,13 @@ module "eks" {
       EOT
     }
   }
+
+  tags = var.tags
+  # cluster_security_group_tags = var.tags
+  # cluster_tags                = var.tags
+  # iam_role_tags               = var.tags
+  # node_iam_role_tags          = var.tags
+  # node_security_group_tags    = var.tags
 }
 
 resource "aws_autoscaling_policy" "cpu_scale_out" {

@@ -10,6 +10,8 @@ module "eks_ingress_iam" {
       namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
     }
   }
+
+  tags = var.tags
 }
 
 module "eks_external_dns_iam" {
@@ -25,4 +27,6 @@ module "eks_external_dns_iam" {
       namespace_service_accounts = ["kube-system:external-dns"]
     }
   }
+
+  tags = var.tags
 }

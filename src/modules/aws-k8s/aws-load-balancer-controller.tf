@@ -1,10 +1,11 @@
 resource "aws_acm_certificate" "eks_domain_cert" {
-  domain_name       = local.dns_base_domain
+  domain_name       = var.dns.base_domain
   validation_method = "DNS"
 
   subject_alternative_names = [
-    "*.${local.dns_base_domain}",
+    "*.${var.dns.base_domain}",
   ]
+  tags = var.tags
 }
 
 resource "aws_route53_record" "eks_domain_cert_validation_dns" {
@@ -46,11 +47,12 @@ resource "kubernetes_service_account" "load_balancer_controller" {
 }
 
 resource "helm_release" "aws_load_balancer_controller" {
-  name            = "aws-load-balancer-controller"
-  version         = "1.11.0"
-  namespace       = "kube-system"
-  repository      = "https://aws.github.io/eks-charts"
-  chart           = "aws-load-balancer-controller"
+  name       = "aws-load-balancer-controller"
+  version    = "1.11.0"
+  namespace  = "kube-system"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+
   atomic          = true
   wait            = true
   cleanup_on_fail = true

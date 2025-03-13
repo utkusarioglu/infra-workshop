@@ -1,4 +1,22 @@
 locals {
+  constants = {
+    MOCKED = "MOCKED"
+  }
+
+  _dns = {
+    base_domain = "utkusarioglu.com"
+    subdomain   = "eks1"
+  }
+  dns = merge(
+    local._dns,
+    {
+      hostname = join(".", [
+        local._dns.subdomain,
+        local._dns.base_domain
+      ])
+    }
+  )
+
   /*
    * Short names are useful for resources such as buckets that have hard
    * limits on filenames
@@ -21,7 +39,7 @@ locals {
    */
   secret = {
     devcontainer = {
-      root_pass = file(join("/", [get_repo_root(), ".secrets", "devcontainer_root_pass"]))
+      root_pass = trim(file(join("/", [get_repo_root(), ".secrets", "devcontainer_root_pass"])), "\n")
     }
   }
 
@@ -50,9 +68,11 @@ locals {
     Paths that are relevant to tg and tf
   */
   abspath = {
-    modules                 = join("/", [get_repo_root(), get_env("MODULES_RELPATH")])
-    config                  = join("/", [get_repo_root(), get_env("CONFIG_RELPATH")])
-    terragrunt_download_dir = join("/", [get_repo_root(), get_env("TERRAGRUNT_DOWNLOAD_DIR_RELPATH")])
+    modules = join("/", [get_repo_root(), get_env("MODULES_RELPATH")])
+    config  = join("/", [get_repo_root(), get_env("CONFIG_RELPATH")])
+    terragrunt = {
+      download_dir = join("/", [get_repo_root(), get_env("TERRAGRUNT_DOWNLOAD_DIR_RELPATH")])
+    }
     artifacts = {
       base = join("/", [get_repo_root(), "artifacts"])
       kube = join("/", [get_repo_root(), get_env("KUBE_ARTIFACTS_RELPATH")])
@@ -92,8 +112,10 @@ locals {
 }
 
 inputs = {
-  names   = local.names
-  abspath = local.abspath
-  id      = local.id
-  secret  = local.secret
+  names     = local.names
+  abspath   = local.abspath
+  id        = local.id
+  secret    = local.secret
+  dns       = local.dns
+  constants = local.constants
 }
