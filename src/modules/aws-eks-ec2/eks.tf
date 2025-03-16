@@ -1,9 +1,13 @@
 module "eks" {
-  source = "terraform-aws-modules/eks/aws"
+  source  = "terraform-aws-modules/eks/aws"
+  version = "20.34.0"
 
   cluster_name    = var.cluster_name
   cluster_version = "1.32"
 
+  vpc_id                                   = module.vpc.vpc_id
+  subnet_ids                               = module.vpc.private_subnets
+  control_plane_subnet_ids                 = module.vpc.private_subnets
   enable_irsa                              = true
   cluster_endpoint_public_access           = true
   cluster_endpoint_private_access          = true
@@ -39,10 +43,6 @@ module "eks" {
     aws-ebs-csi-driver     = {}
   }
 
-  vpc_id                   = module.vpc.vpc_id
-  subnet_ids               = module.vpc.private_subnets
-  control_plane_subnet_ids = module.vpc.private_subnets
-
   node_security_group_additional_rules = {
     ingress_allow_access_from_alb_sg = {
       type                     = "ingress"
@@ -58,11 +58,6 @@ module "eks" {
       ami_type       = "BOTTLEROCKET_x86_64"
       instance_types = ["t3.medium"]
       capacity_type  = "SPOT"
-
-      create_spot_instance      = true
-      spot_wait_for_fulfillment = true
-      spot_price                = "0.0038"
-      spot_type                 = "persistent"
 
       create_launch_template = true
 
@@ -120,30 +115,3 @@ resource "aws_autoscaling_policy" "cpu_scale_out" {
     target_value = 70 # Scale out when CPU usage > 70%
   }
 }
-
-# module "asg" {
-#   source = "terraform-aws-modules/autoscaling/aws"
-
-#   name                = "eks-asg"
-#   use_name_prefix     = false
-#   min_size           = 1
-#   max_size           = 5
-#   desired_capacity   = 2
-#   wait_for_capacity_timeout = "0"
-
-#   # Link the Auto Scaling Group Name from EKS
-#   autoscaling_group_name = module.eks.eks_managed_node_groups_autoscaling_group_names["default"]
-
-#   scaling_policies = {
-#     scale-out = {
-#       policy_type            = "TargetTrackingScaling"
-#       estimated_instance_warmup = 180
-#       target_tracking_configuration = {
-#         predefined_metric_specification = {
-#           predefined_metric_type = "ASGAverageCPUUtilization"
-#         }
-#         target_value = 70  # Scale out when CPU utilization > 70%
-#       }
-#     }
-#   }
-# }

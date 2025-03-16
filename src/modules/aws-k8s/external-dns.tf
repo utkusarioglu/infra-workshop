@@ -5,6 +5,12 @@ resource "helm_release" "external_dns" {
   version    = "1.15.2"
   namespace  = "kube-system"
 
+  atomic            = true
+  wait              = true
+  cleanup_on_fail   = true
+  wait_for_jobs     = true
+  dependency_update = true
+
   values = [
     jsonencode({
       domainFilters = [

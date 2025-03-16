@@ -1,5 +1,6 @@
 module "sg_web" {
-  source = "terraform-aws-modules/security-group/aws//modules/web"
+  source  = "terraform-aws-modules/security-group/aws//modules/web"
+  version = "5.3.0"
 
   name   = "alb-sg-web"
   vpc_id = module.vpc.vpc_id

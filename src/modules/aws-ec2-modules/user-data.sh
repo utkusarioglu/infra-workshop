@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]; then
   exec sudo bash "$0" "$@"
 fi
 
-set -uex
+set -uexo pipefail
 
 exec > /var/log/user-data.log 2>&1
 

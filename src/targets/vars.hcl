@@ -64,7 +64,7 @@ locals {
     local._names_extra
   )
 
-  _k8s_prefix = "tag.repo.utkusarioglu.com"
+  _k8s_prefix = "repo.utkusarioglu.com"
   _tags_meta = {
     cluster       = local.names.cluster
     cluster_short = local.names.cluster_short

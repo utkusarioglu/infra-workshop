@@ -76,7 +76,7 @@ resource "aws_instance" "bird" {
   subnet_id                   = aws_subnet.cat.id
   monitoring                  = true
   user_data = templatefile("user-data.aws.sh", {
-    bucket        = local.bucket
+    bucket_name   = local.bucket_name
     email_address = local.email_address
     domain_name   = "${local.subdomain}.${data.aws_route53_zone.domain.name}"
   })
@@ -86,7 +86,7 @@ resource "aws_instance" "bird" {
   instance_market_options {
     market_type = "spot"
     spot_options {
-      max_price = "0.003"
+      max_price = var.spot_max_price
     }
   }
 }
@@ -128,7 +128,7 @@ resource "aws_route53_record" "subdomain" {
 
 # Done
 resource "aws_s3_bucket" "files" {
-  bucket = local.bucket
+  bucket = local.bucket_name
 }
 
 # Done

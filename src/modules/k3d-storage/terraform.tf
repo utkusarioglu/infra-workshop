@@ -3,16 +3,16 @@ variable "default_volume_path" {
 }
 
 resource "helm_release" "local_path_provisioner" {
-  name            = "host-volumes-provisioner"
-  chart           = "local-path-provisioner"
-  repository      = "https://charts.containeroo.ch"
-  version         = "0.0.31"
-  namespace       = "kube-system"
+  name       = "host-volumes-provisioner"
+  chart      = "local-path-provisioner"
+  repository = "https://charts.containeroo.ch"
+  version    = "0.0.31"
+  namespace  = "kube-system"
+
   cleanup_on_fail = true
   lint            = true
   atomic          = true
   timeout         = 60
-
 
   values = [
     yamlencode({

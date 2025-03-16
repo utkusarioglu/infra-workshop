@@ -24,8 +24,6 @@ yum install -y certbot
 systemctl enable --now docker
 usermod -aG docker ec2-user
 
-# newgrp docker
-
 docker run \
   -d \
   --rm \

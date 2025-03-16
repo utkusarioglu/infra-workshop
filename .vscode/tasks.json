@@ -37,9 +37,10 @@
         "k3d/dev/local/default",
         "aws/dev/eu-central-1/vpc",
         "aws/dev/eu-central-1/eks1",
-        "aws/dev/us-west-1/prov",
         "aws/dev/us-east-1/mod",
-        "aws/dev/us-east-1/cont"
+        "aws/dev/us-east-1/cont",
+        "aws/dev/us-east-1/hard-meow",
+        "aws/dev/us-west-1/prov",
       ],
       "default": "k3d/dev/local",
     },

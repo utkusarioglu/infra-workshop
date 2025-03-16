@@ -60,7 +60,8 @@ module "ecs_cluster" {
 }
 
 module "ecs_service" {
-  source = "terraform-aws-modules/ecs/aws//modules/service"
+  source  = "terraform-aws-modules/ecs/aws//modules/service"
+  version = "5.12.0"
 
   name                   = "${local.name}-service"
   cluster_arn            = module.ecs_cluster.arn
@@ -120,7 +121,8 @@ module "ecs_service" {
 }
 
 module "alb" {
-  source = "terraform-aws-modules/alb/aws"
+  source  = "terraform-aws-modules/alb/aws"
+  version = "9.13.0"
 
   name                       = local.name
   load_balancer_type         = "application"

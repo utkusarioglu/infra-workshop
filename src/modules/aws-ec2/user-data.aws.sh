@@ -1,13 +1,20 @@
 #!/bin/bash
 
+if [ "$EUID" -ne 0 ]; then
+  echo "Rerunning with sudo"
+  exec sudo bash "$0" "$@"
+fi
+
+set -euo pipefail
+
 exec > /var/log/user-data.log 2>&1
 
-sudo amazon-linux-extras install nginx1 epel -y
-sudo yum install -y certbot
+amazon-linux-extras install nginx1 epel -y
+yum install -y certbot
 
 systemctl start nginx
 
-sudo certbot certonly \
+certbot certonly \
   --noninteractive \
   --agree-tos \
   --webroot \
@@ -15,9 +22,9 @@ sudo certbot certonly \
   -d ${domain_name} \
   --email ${email_address}
 
-sudo sh -c 'echo "0 0 * * * root certbot renew --quiet" > /etc/cron.d/certbot-renew'
+echo "0 0 * * * root certbot renew --quiet" > /etc/cron.d/certbot-renew
 
-sudo aws s3 cp s3://${bucket}/index.html /usr/share/nginx/html/index.html
-sudo aws s3 cp s3://${bucket}/nginx.conf /etc/nginx/nginx.conf
+aws s3 cp s3://${bucket_name}/index.html /usr/share/nginx/html/index.html
+aws s3 cp s3://${bucket_name}/nginx.conf /etc/nginx/nginx.conf
 
-sudo systemctl restart nginx
+systemctl restart nginx

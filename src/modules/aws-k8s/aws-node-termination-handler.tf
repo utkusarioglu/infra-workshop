@@ -5,10 +5,11 @@ resource "helm_release" "spot_termination_handler" {
   version    = "0.27.0"
   namespace  = "kube-system"
 
-  atomic          = true
-  wait            = true
-  cleanup_on_fail = true
-  wait_for_jobs   = true
+  atomic            = true
+  wait              = true
+  cleanup_on_fail   = true
+  wait_for_jobs     = true
+  dependency_update = true
 
   values = [
     yamlencode({

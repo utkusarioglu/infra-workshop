@@ -22,5 +22,6 @@ inputs = {
   key_pair_name          = "some-key-pair"
   instance_type          = "t3.micro"
   cidr_block             = "10.0.0.0/16"
+  spot_max_price         = "0.0031"
   abspath_artifacts_base = local.inputs.abspath.artifacts.base
 }

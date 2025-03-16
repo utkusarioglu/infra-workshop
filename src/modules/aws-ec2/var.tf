@@ -27,15 +27,9 @@ variable "tags" {
 }
 
 
-# variable "counter" {
-#   description = "Number of instances to launch"
-#   type        = number
-# }
-
-# variable "file_name" {
-#   description = "Name of the key pair"
-#   type        = string
-# }
+variable "spot_max_price" {
+  type = string
+}
 
 variable "cidr_block" {
   description = "CIDR Block"

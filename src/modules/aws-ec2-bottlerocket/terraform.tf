@@ -110,7 +110,7 @@ module "ec2_instance" {
 
 module "records" {
   source  = "terraform-aws-modules/route53/aws//modules/records"
-  version = "~> 3.0"
+  version = "4.1.0"
 
   zone_name = "utkusarioglu.com."
 
