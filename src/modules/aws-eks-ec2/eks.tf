@@ -37,7 +37,6 @@ module "eks" {
     }
   }
 
-  # coredns, kube-proxy, and vpc-cni are automatically installed by EKS         
   cluster_addons = {
     eks-pod-identity-agent = {},
     aws-ebs-csi-driver     = {}
@@ -73,8 +72,6 @@ module "eks" {
         Asg = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
       }
 
-      # This is not required - demonstrates how to pass additional configuration
-      # Ref https://bottlerocket.dev/en/os/1.19.x/api/settings/
       bootstrap_extra_args = <<-EOT
         # The admin host container provides SSH access and runs with "superpowers".
         # It is disabled by default, but can be disabled explicitly.
@@ -103,15 +100,14 @@ module "eks" {
 }
 
 resource "aws_autoscaling_policy" "cpu_scale_out" {
-  name        = "default-group"
-  policy_type = "TargetTrackingScaling"
-  # autoscaling_group_name = "default"
+  name                   = "default-group"
+  policy_type            = "TargetTrackingScaling"
   autoscaling_group_name = module.eks.eks_managed_node_groups_autoscaling_group_names[0]
 
   target_tracking_configuration {
     predefined_metric_specification {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }
-    target_value = 70 # Scale out when CPU usage > 70%
+    target_value = 70
   }
 }

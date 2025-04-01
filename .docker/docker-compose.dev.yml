@@ -1,6 +1,6 @@
 services:
   infra-workshop:
-    image: utkusarioglu/tf-devcontainer:23-ubuntu-test-23
+    image: utkusarioglu/tf-devcontainer:23-ubuntu-test-24
     environment:
       TZ: Etc/UTC0
       CLUSTER_HOSTNAME: infra-workshop.utkusarioglu.com

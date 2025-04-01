@@ -1,5 +1,5 @@
 include "provider_aws" {
-  path = find_in_parent_folders("provider.aws.hcl")
+  path = find_in_parent_folders("terragrunt/providers/aws.hcl")
 }
 
 include "remote_state" {

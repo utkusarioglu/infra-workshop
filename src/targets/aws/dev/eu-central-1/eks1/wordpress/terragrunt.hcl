@@ -7,11 +7,11 @@ include "target" {
 }
 
 include "provider_aws" {
-  path = find_in_parent_folders("provider.aws.hcl")
+  path = find_in_parent_folders("terragrunt/providers/aws.hcl")
 }
 
 include "provider_aws_k8s_helm" {
-  path = find_in_parent_folders("provider.aws-k8s-helm.hcl")
+  path = find_in_parent_folders("terragrunt/providers/aws-k8s-helm.hcl")
 }
 
 include "kubectl_api_resources_log" {

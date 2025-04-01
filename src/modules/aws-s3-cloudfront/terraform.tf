@@ -58,6 +58,23 @@ module "acm" {
   zone_id                = data.aws_route53_zone.this.zone_id
 }
 
+module "route53" {
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+  zone_id = data.aws_route53_zone.this.zone_id
+
+  records = [
+    {
+      name = var.dns.subdomain
+      type = "A"
+      alias = {
+        name                   = module.cloudfront.cloudfront_distribution_domain_name
+        zone_id                = module.cloudfront.cloudfront_distribution_hosted_zone_id
+        evaluate_target_health = false
+      }
+    }
+  ]
+}
+
 module "cloudfront" {
   source  = "terraform-aws-modules/cloudfront/aws"
   version = "4.1.0"
@@ -97,21 +114,4 @@ module "cloudfront" {
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
-}
-
-module "route53" {
-  source  = "terraform-aws-modules/route53/aws//modules/records"
-  zone_id = data.aws_route53_zone.this.zone_id
-
-  records = [
-    {
-      name = var.dns.subdomain
-      type = "A"
-      alias = {
-        name                   = module.cloudfront.cloudfront_distribution_domain_name
-        zone_id                = module.cloudfront.cloudfront_distribution_hosted_zone_id
-        evaluate_target_health = false
-      }
-    }
-  ]
 }

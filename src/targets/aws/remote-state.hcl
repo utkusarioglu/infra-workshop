@@ -11,11 +11,11 @@ remote_state {
   }
 
   config = {
-    bucket         = local.inputs.id.dash.region
-    key            = "${local.inputs.id.dash.unit}.terraform.tfstate"
+    bucket         = format("%s-tfstate", local.inputs.id.dash.region)
+    key            = format("%s.tfstate", local.inputs.id.dash.unit)
     region         = local.inputs.names.region
     encrypt        = true
-    dynamodb_table = local.inputs.id.dash.unit
+    dynamodb_table = format("%s-tfstate", local.inputs.id.dash.unit)
     profile        = local.inputs.profile
   }
 }

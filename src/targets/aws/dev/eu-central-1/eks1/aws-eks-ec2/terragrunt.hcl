@@ -7,11 +7,11 @@ include "target" {
 }
 
 include "provider_aws" {
-  path = find_in_parent_folders("provider.aws.hcl")
+  path = find_in_parent_folders("terragrunt/providers/aws.hcl")
 }
 
 include "provider_http" {
-  path = find_in_parent_folders("provider.http.hcl")
+  path = find_in_parent_folders("terragrunt/providers/http.hcl")
 }
 
 locals {
